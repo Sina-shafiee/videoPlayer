@@ -35,7 +35,7 @@ const VideoRecorder = () => {
         }
       }
     };
-    // we already checked the button responsible for this callback to not run if
+    // we already checked the button responsible for this callback to not render if
     // recorded value dose not exist but here also am checking because of ts and i am lazy enough
     // to put a ! on line 41 :D
     if (recordedVideo) {
