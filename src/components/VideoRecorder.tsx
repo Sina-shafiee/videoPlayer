@@ -1,14 +1,15 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import useCamera from '../hooks/useCamera';
 import useRecorder from '../hooks/useRecorder';
-
-const mimeType = 'video/webm; codecs="opus,vp8"';
+import VideoPlayer from './VideoPlayer';
 
 const VideoRecorder = () => {
   const liveVideoPreview = useRef<HTMLVideoElement>(null);
+  const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
+
   const [permission, getCameraPermission, stream] = useCamera(liveVideoPreview);
-  const [recordingStatus, startRecording, stopRecording, recordedVideo] =
-    useRecorder(stream, mimeType);
+  const [recordingStatus, startRecording, stopRecording, videoSize] =
+    useRecorder(stream, setRecordedVideo);
 
   const handleUpload = () => {
     // upload video
@@ -38,12 +39,21 @@ const VideoRecorder = () => {
       </main>
 
       <div className='video-player'>
-        {!recordedVideo ? <video ref={liveVideoPreview} autoPlay /> : null}
+        <VideoPlayer
+          style={recordedVideo ? { display: 'none' } : undefined}
+          ref={liveVideoPreview}
+          autoPlay
+        />
         {recordedVideo ? (
           <div className='recorded-player'>
-            <video src={recordedVideo} controls></video>
-            <button onClick={handleUpload}>upload Recording</button>
+            <VideoPlayer src={recordedVideo} controls />
           </div>
+        ) : null}
+
+        {recordedVideo && videoSize ? (
+          <button onClick={handleUpload}>
+            upload {videoSize.toFixed(2) + 'MB'} Video
+          </button>
         ) : null}
       </div>
     </div>
