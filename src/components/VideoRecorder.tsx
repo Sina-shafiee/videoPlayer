@@ -57,7 +57,7 @@ const VideoRecorder = () => {
 
         toast.success('Video uploaded');
       } catch (error) {
-        toast.error('Something went wrong! please try again later');
+        toast.error(JSON.stringify(error));
         console.error(error);
       }
     }
