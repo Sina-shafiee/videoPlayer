@@ -1,6 +1,7 @@
 import { Dispatch, useRef, useState } from 'react';
 import { MAX_VIDEO_LENGTH, mimeType } from '../config/constants';
 import { bytesToMB } from '../utils/bytesToMb';
+import { videoChunksToBlobUrl } from '../utils/videoChunksToBlobUrl';
 
 type ReturnType = [boolean, () => void, () => void, null | number];
 
@@ -14,26 +15,18 @@ const useRecorder = (
   const [videoSize, setVideoSize] = useState<number | null>(null);
   const timerRef = useRef<number | null>(null);
 
-  const convertVideoChunksToBlobUrl = (): Promise<string> => {
-    return new Promise((resolve) => {
-      mediaRecorder.current!.addEventListener('stop', () => {
-        const videoBlob = new Blob(videoChunks, { type: mimeType });
-        const videoUrl = URL.createObjectURL(videoBlob);
-        setIsRecording(false);
-        setVideoSize(bytesToMB(videoBlob.size));
-        setRecordedVideo(null);
-        resolve(videoUrl);
-      });
-    });
-  };
   const stopRecording = () => {
     mediaRecorder.current!.stop();
     // clearing timer
     clearTimeout(timerRef.current!);
     // converting chunks to url and setting data url
-    convertVideoChunksToBlobUrl().then((dataUrl) => {
-      setRecordedVideo(dataUrl);
-    });
+    videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
+      ({ videoBlob, videoUrl }) => {
+        setIsRecording(false);
+        setVideoSize(bytesToMB(videoBlob.size));
+        setRecordedVideo(videoUrl);
+      }
+    );
   };
 
   const startRecording = () => {
@@ -54,21 +47,24 @@ const useRecorder = (
       videoChunks.push(event.data);
     });
 
-    //
     setVideoChunks(videoChunks);
 
-    // auto stop recording after max video length time
+    // checking if there is already a timer
     if (timerRef.current) {
-      // checking if there is already a timer
       clearTimeout(timerRef.current);
-
-      timerRef.current = setTimeout(() => {
-        mediaRecorder.current!.stop();
-        convertVideoChunksToBlobUrl().then((dataUrl) => {
-          setRecordedVideo(dataUrl);
-        });
-      }, MAX_VIDEO_LENGTH);
     }
+
+    // auto stop recording after max video length time
+    timerRef.current = setTimeout(() => {
+      mediaRecorder.current!.stop();
+      videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
+        ({ videoBlob, videoUrl }) => {
+          setIsRecording(false);
+          setVideoSize(bytesToMB(videoBlob.size));
+          setRecordedVideo(videoUrl);
+        }
+      );
+    }, MAX_VIDEO_LENGTH);
   };
 
   return [isRecording, startRecording, stopRecording, videoSize];

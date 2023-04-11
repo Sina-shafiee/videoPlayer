@@ -36,6 +36,7 @@ const useCamera = (
 
         // live preview
         liveVideoPreview!.current!.srcObject = videoStream;
+
         setStream(combinedStream);
       } catch (err: any) {
         console.error(err);
