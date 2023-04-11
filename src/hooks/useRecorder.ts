@@ -22,6 +22,7 @@ const useRecorder = (
     // converting chunks to url and setting data url
     videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
       ({ videoBlob, videoUrl }) => {
+        console.log(videoBlob);
         setIsRecording(false);
         setVideoSize(bytesToMB(videoBlob.size));
         setRecordedVideo(videoUrl);
