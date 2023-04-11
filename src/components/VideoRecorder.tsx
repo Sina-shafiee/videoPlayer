@@ -11,7 +11,7 @@ import { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
 const VideoRecorder = () => {
   const liveVideoPreview = useRef<HTMLVideoElement>(null);
   const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(20);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const [permission, getCameraPermission, stream] = useCamera(liveVideoPreview);
   const [recordingStatus, startRecording, stopRecording, videoSize] =
