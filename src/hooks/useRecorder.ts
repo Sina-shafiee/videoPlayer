@@ -23,9 +23,9 @@ const useRecorder = (
     clearTimeout(timerRef.current!);
     // converting chunks to url and setting data url
     videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
-      ({ videoBlob, videoUrl }) => {
+      ({ videoFile, videoUrl }) => {
         setIsRecording(false);
-        setVideoSize(bytesToMB(videoBlob.size));
+        setVideoSize(bytesToMB(videoFile.size));
         setRecordedVideo(videoUrl);
       }
     );
@@ -60,9 +60,9 @@ const useRecorder = (
     timerRef.current = setTimeout(() => {
       mediaRecorder.current!.stop();
       videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
-        ({ videoBlob, videoUrl }) => {
+        ({ videoFile, videoUrl }) => {
           setIsRecording(false);
-          setVideoSize(bytesToMB(videoBlob.size));
+          setVideoSize(bytesToMB(videoFile.size));
           setRecordedVideo(videoUrl);
         }
       );

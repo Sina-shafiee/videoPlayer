@@ -11,13 +11,15 @@ import { mimeType } from '../config/constants';
 export const videoChunksToBlobUrl = (
   mediaRecorder: MutableRefObject<MediaRecorder | null>,
   videoChunks: Blob[]
-): Promise<{ videoUrl: string; videoBlob: Blob }> => {
+): Promise<{ videoUrl: string; videoFile: File }> => {
   return new Promise((resolve) => {
     mediaRecorder.current!.addEventListener('stop', () => {
-      const videoBlob = new Blob(videoChunks, { type: mimeType });
-      const videoUrl = URL.createObjectURL(videoBlob);
+      const videoFile = new File(videoChunks, `${Date.now()}+video.webm`, {
+        type: mimeType
+      });
+      const videoUrl = URL.createObjectURL(videoFile);
 
-      resolve({ videoUrl, videoBlob });
+      resolve({ videoUrl, videoFile });
     });
   });
 };
