@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { MutableRefObject } from 'react';
+import { toast } from 'react-hot-toast';
 
 // hook return value's type as tuple
 type ReturnType = [boolean, () => Promise<void>, MediaStream | null];
@@ -43,7 +44,7 @@ const useCamera = (
         console.error(err);
       }
     } else {
-      alert(
+      toast.error(
         'Sorry dear visitor, Your device browser dose not support video recording... '
       );
     }
