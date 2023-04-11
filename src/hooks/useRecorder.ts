@@ -1,4 +1,6 @@
-import { Dispatch, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import type { SetStateAction, Dispatch } from 'react';
+
 import { MAX_VIDEO_LENGTH, mimeType } from '../config/constants';
 import { bytesToMB } from '../utils/bytesToMb';
 import { videoChunksToBlobUrl } from '../utils/videoChunksToBlobUrl';
@@ -7,7 +9,7 @@ type ReturnType = [boolean, () => void, () => void, null | number];
 
 const useRecorder = (
   stream: MediaStream | null,
-  setRecordedVideo: Dispatch<React.SetStateAction<string | null>>
+  setRecordedVideo: Dispatch<SetStateAction<string | null>>
 ): ReturnType => {
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -22,7 +24,6 @@ const useRecorder = (
     // converting chunks to url and setting data url
     videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
       ({ videoBlob, videoUrl }) => {
-        console.log(videoBlob);
         setIsRecording(false);
         setVideoSize(bytesToMB(videoBlob.size));
         setRecordedVideo(videoUrl);

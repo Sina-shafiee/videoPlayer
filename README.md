@@ -12,6 +12,6 @@ this project is bootstrapped by vite so make sure to run `yarn dev` in order to 
 
 - components: where we store all reuseable piece of our application
 - utils: all utility and helper functions
-- hooks: all hooks and reusable piece of codes
+- hooks: where all hooks belongs to
 - config: global config and constant data
 - api: all responsible functions for talking to the backend

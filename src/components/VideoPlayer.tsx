@@ -1,4 +1,5 @@
-import { forwardRef, LegacyRef } from 'react';
+import { forwardRef } from 'react';
+import type { LegacyRef } from 'react';
 
 const VideoPlayer = forwardRef(
   (

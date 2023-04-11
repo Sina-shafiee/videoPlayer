@@ -1,4 +1,5 @@
-import { MutableRefObject, useState } from 'react';
+import { useState } from 'react';
+import type { MutableRefObject } from 'react';
 
 // hook return value's type as tuple
 type ReturnType = [boolean, () => Promise<void>, MediaStream | null];
