@@ -6,7 +6,7 @@ import useRecorder from '../hooks/useRecorder';
 
 import VideoPlayer from './VideoPlayer';
 import uploadVideo from '../api/uploadVideo';
-import { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
+import type { AxiosProgressEvent } from 'axios';
 
 const VideoRecorder = () => {
   const liveVideoPreview = useRef<HTMLVideoElement>(null);
