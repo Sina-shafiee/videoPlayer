@@ -14,7 +14,7 @@ export const videoChunksToBlobUrl = (
 ): Promise<{ videoUrl: string; videoFile: File }> => {
   return new Promise((resolve) => {
     mediaRecorder.current!.addEventListener('stop', () => {
-      const videoFile = new File(videoChunks, `${Date.now()}+video.webm`, {
+      const videoFile = new File(videoChunks, `${Date.now()}-video.webm`, {
         type: mimeType
       });
       const videoUrl = URL.createObjectURL(videoFile);

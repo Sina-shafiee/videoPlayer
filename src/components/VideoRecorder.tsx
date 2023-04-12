@@ -10,7 +10,11 @@ import type { AxiosProgressEvent } from 'axios';
 
 const VideoRecorder = memo(() => {
   const liveVideoPreview = useRef<HTMLVideoElement>(null);
-  const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
+  const [recordedVideo, setRecordedVideo] = useState<{
+    url: string | null;
+    file: File | null;
+  }>({ url: null, file: null });
+
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const [permission, getCameraPermission, stream] = useCamera(liveVideoPreview);
@@ -35,18 +39,11 @@ const VideoRecorder = memo(() => {
         }
       }
     };
-    // we already checked the button responsible for this callback to not render if
-    // recorded value dose not exist but here also am checking because of ts and i am lazy enough
-    // to put a ! on line 41 :D
-    if (recordedVideo) {
-      // fetching saved blob url to create a file and upload them to the server
-      const mediaBlob = await fetch(recordedVideo);
-      const webmBlob = await mediaBlob.blob();
 
-      const mp4File = new File([webmBlob], 'demo.mp4', { type: 'video/mp4' });
-
+    // appending video to formData and upload to the server
+    if (recordedVideo.file) {
       const formData = new FormData();
-      formData.append('video', mp4File, `${Date.now()}-video.mp4`);
+      formData.append('video', recordedVideo.file, `${Date.now()}-video.webm`);
 
       try {
         const apiResponse = await uploadVideo(formData, config);
@@ -92,16 +89,20 @@ const VideoRecorder = memo(() => {
 
       <section>
         <VideoPlayer
-          style={recordedVideo ? { display: 'none' } : undefined}
+          style={recordedVideo.url ? { display: 'none' } : undefined}
           ref={liveVideoPreview}
           className='video-player'
           autoPlay
         />
-        {recordedVideo ? (
-          <VideoPlayer className='video-player' src={recordedVideo} controls />
+        {recordedVideo.url ? (
+          <VideoPlayer
+            className='video-player'
+            src={recordedVideo.url}
+            controls
+          />
         ) : null}
 
-        {recordedVideo && videoSize ? (
+        {recordedVideo.file && videoSize ? (
           <button onClick={handleUpload}>
             upload {videoSize.toFixed(2) + 'MB'} Video
           </button>

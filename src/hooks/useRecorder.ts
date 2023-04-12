@@ -9,7 +9,9 @@ type ReturnType = [boolean, () => void, () => void, null | number];
 
 const useRecorder = (
   stream: MediaStream | null,
-  setRecordedVideo: Dispatch<SetStateAction<string | null>>
+  setRecordedVideo: Dispatch<
+    SetStateAction<{ url: string | null; file: File | null }>
+  >
 ): ReturnType => {
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -21,7 +23,7 @@ const useRecorder = (
   const onStop = (videoFile: File, videoUrl: string) => {
     setIsRecording(false);
     setVideoSize(bytesToMB(videoFile.size));
-    setRecordedVideo(videoUrl);
+    setRecordedVideo({ url: videoUrl, file: videoFile });
   };
 
   // responsible for stopping recording
@@ -40,7 +42,7 @@ const useRecorder = (
   // responsible for starting recording
   const startRecording = () => {
     setIsRecording(true);
-    setRecordedVideo(null);
+    setRecordedVideo({ url: null, file: null });
     // creating new media recorder instance
     const media = new MediaRecorder(stream!, { mimeType });
 
