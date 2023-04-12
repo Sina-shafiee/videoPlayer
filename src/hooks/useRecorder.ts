@@ -58,20 +58,22 @@ const useRecorder = (
 
     setVideoChunks(videoChunks);
 
-    // checking if there is already a timer
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
     // auto stop recording after max video length time
-    timerRef.current = setTimeout(() => {
-      mediaRecorder.current!.stop();
-      videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
-        ({ videoFile, videoUrl }) => {
-          onStop(videoFile, videoUrl);
-        }
-      );
-    }, MAX_VIDEO_LENGTH);
+    mediaRecorder.current.addEventListener('start', () => {
+      // checking if there is already a timer
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+
+      timerRef.current = setTimeout(() => {
+        mediaRecorder.current!.stop();
+        videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
+          ({ videoFile, videoUrl }) => {
+            onStop(videoFile, videoUrl);
+          }
+        );
+      }, MAX_VIDEO_LENGTH + 100);
+    });
   };
 
   return [isRecording, startRecording, stopRecording, videoSize];
