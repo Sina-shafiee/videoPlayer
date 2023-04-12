@@ -14,12 +14,13 @@ const VideoRecorder = memo(() => {
     url: string | null;
     file: File | null;
   }>({ url: null, file: null });
+  const [recordTimer, setRecordTimer] = useState(0);
 
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const [permission, getCameraPermission, stream] = useCamera(liveVideoPreview);
   const [recordingStatus, startRecording, stopRecording, videoSize] =
-    useRecorder(stream, setRecordedVideo);
+    useRecorder(stream, setRecordedVideo, setRecordTimer);
 
   // handle video upload functionality
   const handleUpload = async () => {
@@ -76,7 +77,7 @@ const VideoRecorder = memo(() => {
         ) : null}
         {recordingStatus ? (
           <button onClick={stopRecording} type='button'>
-            Stop Recording
+            Stop Recording - recording.. {recordTimer} sec
           </button>
         ) : null}
         {uploadProgress ? (
