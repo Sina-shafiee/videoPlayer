@@ -17,6 +17,14 @@ const useRecorder = (
   const [videoSize, setVideoSize] = useState<number | null>(null);
   const timerRef = useRef<number | null>(null);
 
+  // on record stop functionality
+  const onStop = (videoFile: File, videoUrl: string) => {
+    setIsRecording(false);
+    setVideoSize(bytesToMB(videoFile.size));
+    setRecordedVideo(videoUrl);
+  };
+
+  // responsible for stopping recording
   const stopRecording = () => {
     mediaRecorder.current!.stop();
     // clearing timer
@@ -24,13 +32,12 @@ const useRecorder = (
     // converting chunks to url and setting data url
     videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
       ({ videoFile, videoUrl }) => {
-        setIsRecording(false);
-        setVideoSize(bytesToMB(videoFile.size));
-        setRecordedVideo(videoUrl);
+        onStop(videoFile, videoUrl);
       }
     );
   };
 
+  // responsible for starting recording
   const startRecording = () => {
     setIsRecording(true);
     setRecordedVideo(null);
@@ -61,9 +68,7 @@ const useRecorder = (
       mediaRecorder.current!.stop();
       videoChunksToBlobUrl(mediaRecorder, videoChunks).then(
         ({ videoFile, videoUrl }) => {
-          setIsRecording(false);
-          setVideoSize(bytesToMB(videoFile.size));
-          setRecordedVideo(videoUrl);
+          onStop(videoFile, videoUrl);
         }
       );
     }, MAX_VIDEO_LENGTH);

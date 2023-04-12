@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import useCamera from '../hooks/useCamera';
@@ -8,7 +8,7 @@ import VideoPlayer from './VideoPlayer';
 import uploadVideo from '../api/uploadVideo';
 import type { AxiosProgressEvent } from 'axios';
 
-const VideoRecorder = () => {
+const VideoRecorder = memo(() => {
   const liveVideoPreview = useRef<HTMLVideoElement>(null);
   const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -90,7 +90,7 @@ const VideoRecorder = () => {
         ) : null}
       </section>
 
-      <section className='video-player'>
+      <section>
         <VideoPlayer
           style={recordedVideo ? { display: 'none' } : undefined}
           ref={liveVideoPreview}
@@ -109,6 +109,6 @@ const VideoRecorder = () => {
       </section>
     </>
   );
-};
+});
 
 export default VideoRecorder;
