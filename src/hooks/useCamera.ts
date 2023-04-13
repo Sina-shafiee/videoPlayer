@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MutableRefObject, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 type TReturn = [boolean, () => Promise<void>, MediaStream | null];
@@ -7,11 +7,13 @@ const videoConstraints = { audio: false, video: true };
 const audioConstraints = { audio: true };
 
 /**
- * reuseable camera and microphone stream access
- * @param liveVideoPreviewRef optional live preview video element
+ * reuseable camera and microphone stream hook
+ * @param liveVideoPreviewRef live preview video element
  * @returns stream, permission and a function to get camera stream
  */
-const useCamera = (liveVideoPreviewRef?: HTMLVideoElement | null): TReturn => {
+const useCamera = (
+  liveVideoPreviewRef?: MutableRefObject<HTMLVideoElement | null>
+): TReturn => {
   const [permission, setPermission] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
@@ -26,7 +28,6 @@ const useCamera = (liveVideoPreviewRef?: HTMLVideoElement | null): TReturn => {
 
         // reduce await time by awaiting both promises in same time
         const resolver = await Promise.all([audioStream, videoStream]);
-        setPermission(true);
 
         // combine audio and video
         const combinedStream = new MediaStream([
@@ -34,13 +35,15 @@ const useCamera = (liveVideoPreviewRef?: HTMLVideoElement | null): TReturn => {
           ...resolver[1].getVideoTracks()
         ]);
 
+        setPermission(true);
+
         // live preview
-        if (liveVideoPreviewRef) {
-          liveVideoPreviewRef.srcObject = resolver[1];
+        if (liveVideoPreviewRef && liveVideoPreviewRef.current) {
+          liveVideoPreviewRef.current.srcObject = resolver[1];
         }
 
         setStream(combinedStream);
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
       }
     } else {

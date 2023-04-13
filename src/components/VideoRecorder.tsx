@@ -13,9 +13,7 @@ const VideoRecorder = memo(() => {
   const liveVideoPreview = useRef<HTMLVideoElement>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const [permission, getCameraPermission, stream] = useCamera(
-    liveVideoPreview.current
-  );
+  const [permission, getCameraPermission, stream] = useCamera(liveVideoPreview);
   const [
     recordingStatus,
     startRecording,
