@@ -6,21 +6,22 @@ import useRecorder from '../hooks/useRecorder';
 
 import VideoPlayer from './VideoPlayer';
 import uploadVideo from '../api/uploadVideo';
+
 import type { AxiosProgressEvent } from 'axios';
 
 const VideoRecorder = memo(() => {
   const liveVideoPreview = useRef<HTMLVideoElement>(null);
-  const [recordedVideo, setRecordedVideo] = useState<{
-    url: string | null;
-    file: File | null;
-  }>({ url: null, file: null });
-  const [recordTimer, setRecordTimer] = useState(0);
-
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const [permission, getCameraPermission, stream] = useCamera(liveVideoPreview);
-  const [recordingStatus, startRecording, stopRecording, videoSize] =
-    useRecorder(stream, setRecordedVideo, setRecordTimer);
+  const [
+    recordingStatus,
+    startRecording,
+    stopRecording,
+    videoSize,
+    recordedVideo,
+    recordTimer
+  ] = useRecorder(stream);
 
   // handle video upload functionality
   const handleUpload = async () => {

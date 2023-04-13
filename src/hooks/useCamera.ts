@@ -1,13 +1,17 @@
 import { useState } from 'react';
-import type { MutableRefObject } from 'react';
 import { toast } from 'react-hot-toast';
 
-// hook return value's type as tuple
-type ReturnType = [boolean, () => Promise<void>, MediaStream | null];
+import type { MutableRefObject } from 'react';
+type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
+/**
+ *
+ * @param liveVideoPreviewRef live preview video element
+ * @returns stream, permission and a function to get camera stream
+ */
 const useCamera = (
-  liveVideoPreview: MutableRefObject<HTMLVideoElement | null>
-): ReturnType => {
+  liveVideoPreviewRef: MutableRefObject<HTMLVideoElement | null>
+): TReturn => {
   const [permission, setPermission] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
@@ -37,7 +41,7 @@ const useCamera = (
         ]);
 
         // live preview
-        liveVideoPreview!.current!.srcObject = videoStream;
+        liveVideoPreviewRef.current!.srcObject = videoStream;
 
         setStream(combinedStream);
       } catch (err: any) {
