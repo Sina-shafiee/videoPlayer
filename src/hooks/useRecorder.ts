@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 import { MAX_VIDEO_LENGTH, mimeType } from '../config/constants';
 
 import { videoChunksToBlobUrl } from '../utils/videoChunksToBlobUrl';
 import { bytesToMB } from '../utils/bytesToMb';
-import { toast } from 'react-hot-toast';
 
 type TRecordedVideo = {
   url: string | null;
@@ -23,9 +23,7 @@ type TReturn = [
 /**
  * reuseable video recorder hook
  * @param stream Media stream
- * @param setRecordedVideo callback to send back
- * @param setRecordTimer
- * @returns
+ * @returns recording status, start recording, stop recording, video size, recorded video, and recording  timer
  */
 
 const useRecorder = (stream: MediaStream | null): TReturn => {
