@@ -1,50 +1,46 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import type { MutableRefObject } from 'react';
 type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
+const videoConstraints = { audio: false, video: true };
+const audioConstraints = { audio: true };
+
 /**
- *
- * @param liveVideoPreviewRef live preview video element
+ * reuseable camera and microphone stream access
+ * @param liveVideoPreviewRef optional live preview video element
  * @returns stream, permission and a function to get camera stream
  */
-const useCamera = (
-  liveVideoPreviewRef: MutableRefObject<HTMLVideoElement | null>
-): TReturn => {
+const useCamera = (liveVideoPreviewRef?: HTMLVideoElement | null): TReturn => {
   const [permission, setPermission] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   const getCameraPermission = async () => {
     if ('mediaDevices' in navigator) {
       try {
-        const videoConstraints = {
-          audio: false,
-          video: true
-        };
-        const audioConstraints = { audio: true };
+        // getting video and audio stream
+        const audioStream =
+          navigator.mediaDevices.getUserMedia(audioConstraints);
+        const videoStream =
+          navigator.mediaDevices.getUserMedia(videoConstraints);
 
-        // getting access to video and audio
-        const audioStream = await navigator.mediaDevices.getUserMedia(
-          audioConstraints
-        );
-        const videoStream = await navigator.mediaDevices.getUserMedia(
-          videoConstraints
-        );
-
+        // reduce await time by awaiting both promises in same time
+        const resolver = await Promise.all([audioStream, videoStream]);
         setPermission(true);
 
         // combine audio and video
         const combinedStream = new MediaStream([
-          ...videoStream.getVideoTracks(),
-          ...audioStream.getAudioTracks()
+          ...resolver[0].getAudioTracks(),
+          ...resolver[1].getVideoTracks()
         ]);
 
         // live preview
-        liveVideoPreviewRef.current!.srcObject = videoStream;
+        if (liveVideoPreviewRef) {
+          liveVideoPreviewRef.srcObject = resolver[1];
+        }
 
         setStream(combinedStream);
-      } catch (err: any) {
+      } catch (err) {
         console.error(err);
       }
     } else {
