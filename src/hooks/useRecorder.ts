@@ -55,32 +55,6 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
   };
 
   /**
-   * on stop recorder's event callback
-   */
-  const onStop = () => {
-    if (localChunks.current) {
-      videoChunksToBlobUrl(localChunks.current).then(
-        ({ videoFile, videoUrl }) => {
-          handleRecodingStop(videoFile, videoUrl);
-        }
-      );
-    } else {
-      toast.error('please reload the website and try again later');
-    }
-  };
-
-  /**
-   * on data available recorder's event callback
-   * @param event Blob event which we receive recorded data from
-   */
-  const onDataAvailable = (event: BlobEvent) => {
-    // pushing new data
-    if (event.data && event.data.size > 0) {
-      localChunks.current = event.data;
-    }
-  };
-
-  /**
    * on recording start functionality
    */
   const onStart = () => {
@@ -97,6 +71,32 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
     stopTimerRef.current = setTimeout(() => {
       stopRecording();
     }, MAX_VIDEO_LENGTH + 100);
+  };
+
+  /**
+   * on data available recorder's event callback
+   * @param event Blob event which we receive recorded data from
+   */
+  const onDataAvailable = (event: BlobEvent) => {
+    // pushing new data
+    if (event.data && event.data.size > 0) {
+      localChunks.current = event.data;
+    }
+  };
+
+  /**
+   * on stop recorder's event callback
+   */
+  const onStop = () => {
+    if (localChunks.current) {
+      videoChunksToBlobUrl(localChunks.current).then(
+        ({ videoFile, videoUrl }) => {
+          handleRecodingStop(videoFile, videoUrl);
+        }
+      );
+    } else {
+      toast.error('please reload the website and try again later');
+    }
   };
 
   /**
