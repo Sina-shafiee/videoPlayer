@@ -4,17 +4,14 @@ import { toast } from 'react-hot-toast';
 type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
 const videoConstraints = {
-  // audio: false,
+  audio: false,
   video: {
-    width: 1280,
-    height: 720
+    facingMode: {
+      exact: 'environment'
+    }
   }
 };
-const audioConstraints = {
-  audio: {
-    // echoCancellation: { exact: true }
-  }
-};
+const audioConstraints = { audio: true };
 
 /**
  * reuseable camera and microphone stream hook
