@@ -1,13 +1,11 @@
 import { forwardRef } from 'react';
-import type { LegacyRef } from 'react';
+import type { VideoHTMLAttributes } from 'react';
 
-const VideoPlayer = forwardRef(
-  (
-    props: React.VideoHTMLAttributes<HTMLVideoElement>,
-    ref: LegacyRef<HTMLVideoElement>
-  ) => {
-    return <video ref={ref} {...props} />;
-  }
-);
+const VideoPlayer = forwardRef<
+  HTMLVideoElement,
+  VideoHTMLAttributes<HTMLVideoElement>
+>((props, ref) => {
+  return <video ref={ref} {...props} />;
+});
 
 export default VideoPlayer;

@@ -3,8 +3,10 @@ import { toast } from 'react-hot-toast';
 
 type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
-const videoConstraints = { audio: false, video: { width: 320 } };
-const audioConstraints = { audio: true, video: false };
+const constraints = {
+  audio: true,
+  video: { width: 320, frameRate: { min: 20, ideal: 30, max: 60 } }
+} as MediaStreamConstraints;
 
 /**
  * reuseable camera and microphone stream hook
@@ -21,28 +23,18 @@ const useCamera = (
     if ('mediaDevices' in navigator) {
       try {
         // getting video and audio stream
-        const audioStream =
-          navigator.mediaDevices.getUserMedia(audioConstraints);
-        const videoStream =
-          navigator.mediaDevices.getUserMedia(videoConstraints);
-
-        // reduce await time by awaiting both promises in same time
-        const resolver = await Promise.all([audioStream, videoStream]);
-
-        // combine audio and video
-        const combinedStream = new MediaStream([
-          ...resolver[0].getAudioTracks(),
-          ...resolver[1].getVideoTracks()
-        ]);
+        const userStream = await navigator.mediaDevices.getUserMedia(
+          constraints
+        );
 
         setPermission(true);
 
         // live preview
         if (liveVideoPreviewRef && liveVideoPreviewRef.current) {
-          liveVideoPreviewRef.current.srcObject = resolver[1];
+          liveVideoPreviewRef.current.srcObject = userStream;
         }
 
-        setStream(combinedStream);
+        setStream(userStream);
       } catch (err: any) {
         console.error(err);
       }

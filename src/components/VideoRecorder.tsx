@@ -97,6 +97,9 @@ const VideoRecorder = memo(() => {
           ref={liveVideoPreview}
           className='video-player'
           autoPlay
+          muted
+          playsInline
+          disablePictureInPicture
         />
         {recordedVideo.url ? (
           <VideoPlayer
