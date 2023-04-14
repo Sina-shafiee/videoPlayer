@@ -8,8 +8,8 @@ const constraints = {
     echoCancellation: { exact: false }
   },
   video: {
-    width: 1280,
-    height: 720
+    frameRate: { ideal: 30, max: 60 },
+    facingMode: { exact: 'environment' }
   }
 };
 
