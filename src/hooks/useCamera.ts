@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast';
 
 type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
-const videoConstraints = { audio: false, video: { width: 320 } };
+const videoConstraints = { audio: false, video: { width: 640 } };
 const audioConstraints = { audio: true, video: false };
 
 /**
