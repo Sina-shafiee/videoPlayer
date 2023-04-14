@@ -3,16 +3,6 @@ import { toast } from 'react-hot-toast';
 
 type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
-const constraints = {
-  audio: {
-    echoCancellation: { exact: false }
-  },
-  video: {
-    frameRate: { ideal: 30, max: 60 },
-    facingMode: { exact: 'environment' }
-  }
-};
-
 /**
  * reuseable camera and microphone stream hook
  * @param liveVideoPreviewRef live preview video element
@@ -28,9 +18,13 @@ const useCamera = (
     if ('mediaDevices' in navigator) {
       try {
         // getting video and audio stream
-        const browserStream = await navigator.mediaDevices.getUserMedia(
-          constraints
-        );
+        const supportedConstraints =
+          navigator.mediaDevices.getSupportedConstraints();
+        console.log(supportedConstraints);
+        const browserStream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: true
+        });
 
         setPermission(true);
 
