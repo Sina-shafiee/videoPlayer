@@ -111,8 +111,6 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
       return;
     }
 
-    console.log(supportedType[0]);
-
     const media = new MediaRecorder(stream!, {
       mimeType: supportedType[0]
     });
