@@ -20,13 +20,8 @@ const useCamera = (
         // getting video and audio stream
         navigator.mediaDevices
           .getUserMedia({
-            audio: {
-              // echoCancellation: { exact: hasEchoCancellation }
-            },
-            video: {
-              width: 1280,
-              height: 720
-            }
+            audio: false,
+            video: { width: 640, height: 480, facingMode: 'environment' }
           })
           .then((stream) => console.log(stream))
           .catch((er) => console.log('permission :', er));
