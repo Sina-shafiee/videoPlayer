@@ -1,11 +1,7 @@
 import { useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import {
-  OTHER_OS_MIME_TYPE,
-  MAX_VIDEO_LENGTH,
-  MAC_MIME_TYPE
-} from '../config/constants';
+import { MAX_VIDEO_LENGTH, MIME_TYPES } from '../config/constants';
 
 import { videoChunksToBlobUrl } from '../utils/videoChunksToBlobUrl';
 import { bytesToMB } from '../utils/bytesToMb';
@@ -82,7 +78,6 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
    * @param event Blob event which we receive recorded data from
    */
   const onDataAvailable = (event: BlobEvent) => {
-    // pushing new data
     if (event.data && event.data.size > 0) {
       localChunks.current = event.data;
     }
@@ -107,16 +102,17 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
    * responsible for starting recording
    */
   const startRecording = () => {
-    const userAgent = navigator.userAgent;
-    let isMacOs: boolean;
+    const supportedType = MIME_TYPES.filter((type) =>
+      MediaRecorder.isTypeSupported(type)
+    );
 
-    if (userAgent.indexOf('Mac') !== -1 || userAgent.indexOf('Ios') !== -1) {
-      isMacOs = true;
-    } else {
-      isMacOs = false;
+    if (!supportedType.length) {
+      toast.error('Please update your browser');
+      return;
     }
+
     const media = new MediaRecorder(stream!, {
-      mimeType: isMacOs ? MAC_MIME_TYPE : OTHER_OS_MIME_TYPE
+      mimeType: supportedType[0]
     });
 
     mediaRecorder.current = media;
