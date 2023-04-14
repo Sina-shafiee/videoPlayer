@@ -22,7 +22,9 @@ const useCamera = (
           navigator.mediaDevices.getSupportedConstraints();
         console.log(supportedConstraints);
         const browserStream = await navigator.mediaDevices.getUserMedia({
-          audio: false,
+          audio: {
+            width: 320
+          },
           video: true
         });
 
