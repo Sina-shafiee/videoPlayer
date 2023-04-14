@@ -22,8 +22,8 @@ const useCamera = (
           .getUserMedia({
             audio: false,
             video: {
-              width: { min: 640, ideal: 1920 },
-              height: { min: 400, ideal: 1080 }
+              width: 640,
+              height: 420
             }
           })
           .then((stream) => console.log(stream))
