@@ -106,10 +106,7 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
       MediaRecorder.isTypeSupported(type)
     );
 
-    if (!supportedType.length) {
-      toast.error('Please update your browser');
-      return;
-    }
+    console.log(supportedType[0]);
 
     const media = new MediaRecorder(stream!, {
       mimeType: supportedType[0]
