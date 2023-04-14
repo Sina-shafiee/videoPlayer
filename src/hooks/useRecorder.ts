@@ -1,7 +1,11 @@
 import { useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import { MAX_VIDEO_LENGTH, mimeType } from '../config/constants';
+import {
+  OTHER_OS_MIME_TYPE,
+  MAX_VIDEO_LENGTH,
+  MAC_MIME_TYPE
+} from '../config/constants';
 
 import { videoChunksToBlobUrl } from '../utils/videoChunksToBlobUrl';
 import { bytesToMB } from '../utils/bytesToMb';
@@ -103,7 +107,17 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
    * responsible for starting recording
    */
   const startRecording = () => {
-    const media = new MediaRecorder(stream!, { mimeType });
+    const userAgent = navigator.userAgent;
+    let isMacOs: boolean;
+
+    if (userAgent.indexOf('Mac') !== -1 || userAgent.indexOf('Ios') !== -1) {
+      isMacOs = true;
+    } else {
+      isMacOs = false;
+    }
+    const media = new MediaRecorder(stream!, {
+      mimeType: isMacOs ? MAC_MIME_TYPE : OTHER_OS_MIME_TYPE
+    });
 
     mediaRecorder.current = media;
 
