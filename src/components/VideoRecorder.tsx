@@ -35,9 +35,7 @@ const VideoRecorder = memo(() => {
 
         // value is lower than 100 then update progress bar with that value else if value is equal to 100 set progress value to 0 in order to hide progress bar during another recordings
         if (percentCompleted < 100) {
-          setTimeout(() => {
-            setUploadProgress(percentCompleted);
-          }, 500);
+          setUploadProgress(percentCompleted);
         } else if (percentCompleted === 100) {
           setUploadProgress(0);
         }
