@@ -6,24 +6,15 @@ import VideoRecorder from './components/VideoRecorder';
 const App = () => {
   useEffect(() => {
     const userAgent = navigator.userAgent;
-    let isSafari: boolean;
+    let isMacOs: boolean;
 
-    if (userAgent.match(/chrome|chromium|crios/i)) {
-      isSafari = false;
-    } else if (userAgent.match(/firefox|fxios/i)) {
-      isSafari = false;
-    } else if (userAgent.match(/safari/i)) {
-      isSafari = false;
-    } else if (userAgent.match(/opr\//i)) {
-      isSafari = true;
-    } else if (userAgent.match(/edg/i)) {
-      isSafari = false;
+    if (userAgent.indexOf('Mac') !== -1 || userAgent.indexOf('Ios') !== -1) {
+      isMacOs = true;
     } else {
-      isSafari = false;
+      isMacOs = false;
     }
 
-    console.log(navigator.userAgent);
-    console.log(isSafari);
+    console.log(isMacOs);
   }, []);
 
   return (
