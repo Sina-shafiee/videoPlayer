@@ -22,6 +22,7 @@ const App = () => {
       isSafari = false;
     }
 
+    console.log(navigator.userAgent);
     console.log(isSafari);
   }, []);
 
