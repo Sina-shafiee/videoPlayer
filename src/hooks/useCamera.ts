@@ -5,7 +5,7 @@ type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
 const constraints = {
   audio: {
-    echoCancellation: { exact: true }
+    echoCancellation: { exact: false }
   },
   video: {
     width: 1280,
