@@ -19,10 +19,7 @@ const useCamera = (
       try {
         // getting video and audio stream
         navigator.mediaDevices
-          .getUserMedia({
-            audio: false,
-            video: { width: 640, height: 480, facingMode: 'environment' }
-          })
+          .getUserMedia({})
           .then((stream) => console.log(stream))
           .catch((er) => console.log('permission :', er));
 
