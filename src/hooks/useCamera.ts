@@ -4,7 +4,6 @@ import { toast } from 'react-hot-toast';
 type TReturn = [boolean, () => Promise<void>, MediaStream | null];
 
 const videoConstraints = {
-  audio: false,
   video: {
     width: 1280,
     height: 720
@@ -12,7 +11,7 @@ const videoConstraints = {
 };
 const audioConstraints = {
   audio: {
-    echoCancellation: { exact: true }
+    // echoCancellation: { exact: true }
   }
 };
 
