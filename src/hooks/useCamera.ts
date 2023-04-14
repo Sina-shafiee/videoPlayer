@@ -18,14 +18,12 @@ const useCamera = (
     if ('mediaDevices' in navigator) {
       try {
         // getting video and audio stream
-        const supportedConstraints =
-          navigator.mediaDevices.getSupportedConstraints();
-        console.log(supportedConstraints);
         const browserStream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            width: 320
-          },
-          video: true
+          audio: false,
+          video: {
+            width: { min: 320, ideal: 640, max: 1920 },
+            height: { min: 200, ideal: 400, max: 720 }
+          }
         });
 
         setPermission(true);
