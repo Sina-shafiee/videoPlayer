@@ -20,10 +20,12 @@ const useCamera = (
         // getting video and audio stream
         navigator.mediaDevices
           .getUserMedia({
-            audio: true,
+            audio: {
+              // echoCancellation: { exact: hasEchoCancellation }
+            },
             video: {
-              width: 640,
-              height: 420
+              width: 1280,
+              height: 720
             }
           })
           .then((stream) => console.log(stream))
