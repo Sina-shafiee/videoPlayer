@@ -18,22 +18,25 @@ const useCamera = (
     if ('mediaDevices' in navigator) {
       try {
         // getting video and audio stream
-        const browserStream = await navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: {
-            width: { min: 640, ideal: 1920 },
-            height: { min: 400, ideal: 1080 }
-          }
-        });
+        navigator.mediaDevices
+          .getUserMedia({
+            audio: false,
+            video: {
+              width: { min: 640, ideal: 1920 },
+              height: { min: 400, ideal: 1080 }
+            }
+          })
+          .then((stream) => console.log(stream))
+          .catch((er) => console.log('permission :', er));
 
         setPermission(true);
 
         // live preview
-        if (liveVideoPreviewRef && liveVideoPreviewRef.current) {
-          liveVideoPreviewRef.current.srcObject = browserStream;
-        }
+        // if (liveVideoPreviewRef && liveVideoPreviewRef.current) {
+        //   liveVideoPreviewRef.current.srcObject = browserStream;
+        // }
 
-        setStream(browserStream);
+        // setStream(browserStream);
       } catch (err: any) {
         console.error(err);
       }
