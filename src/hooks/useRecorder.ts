@@ -5,6 +5,7 @@ import { MAX_VIDEO_LENGTH, MIME_TYPES } from '../config/constants';
 
 import { videoChunksToBlobUrl } from '../utils/videoChunksToBlobUrl';
 import { bytesToMB } from '../utils/bytesToMb';
+import { supportedMimeType } from '../utils/supportedMimeType';
 
 type TRecordedVideo = {
   url: string | null;
@@ -102,14 +103,8 @@ const useRecorder = (stream: MediaStream | null): TReturn => {
    * responsible for starting recording
    */
   const startRecording = () => {
-    const supportedType = MIME_TYPES.filter((type) =>
-      MediaRecorder.isTypeSupported(type)
-    );
-
-    console.log(supportedType[0]);
-
     const media = new MediaRecorder(stream!, {
-      mimeType: supportedType[0]
+      mimeType: supportedMimeType() ?? ''
     });
 
     mediaRecorder.current = media;
