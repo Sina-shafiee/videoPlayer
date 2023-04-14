@@ -20,7 +20,7 @@ const useCamera = (
         // getting video and audio stream
         navigator.mediaDevices
           .getUserMedia({
-            audio: false,
+            audio: true,
             video: {
               width: 640,
               height: 420
